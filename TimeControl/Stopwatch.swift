@@ -6,19 +6,23 @@
 //
 
 import Foundation
+import Combine
 
 
-class Stopwatch {
+struct Stopwatch {
     
-    var start_time = 0
-    var end_time = 0
+    var start_time: Date?
+    var end_time: Date?
+    var duration: Int=0
     
-    func start_stopwatch(curr_time: MyClass) {
-        start_time = curr_time.curr_min
+    init(start: Date?) {
+        start_time = start
+        end_time = nil
     }
     
-    func stop_stopwatch(curr_time: MyClass) {
-        end_time = curr_time.curr_min
+    mutating func calc_duration() {
+        let calendar_start = Calendar.current.component(.second, from: start_time!)
+        let calendar_finish = Calendar.current.component(.second, from: end_time!)
+        duration = calendar_finish - calendar_start
     }
-    
 }

@@ -71,8 +71,7 @@ struct ContentView: View {
             VStack{
                 HStack {
                     Button {
-//                        stopwatch.start_time(curr_time: curr_time)
-                        print("start")
+                        curr_time.start_stopwatch()
                     } label: {
                         Text("start").padding()
                     }
@@ -82,7 +81,8 @@ struct ContentView: View {
                     Spacer()
                     
                     Button {
-                        print("Stop")
+                        curr_time.finish_stopwatch()
+                        print("\(curr_time.stopwatches.count)")
                     } label: {
                         Text("stop").padding()
                     }
@@ -90,11 +90,27 @@ struct ContentView: View {
                     .buttonStyle(.borderedProminent)
                 }
                 .padding(.horizontal)
-                HStack {
-                    Text ("Name")
-                    Text ("start")
-                    Text ("stop")
-                    Text ("count")
+                
+                if curr_time.stopwatches.count == 0 {
+                    List {
+                        ForEach(0 ... 6, id: \.self) { timer_element in
+                            Text("")
+//                            HStack {
+//                                Text("timer")
+//                                Spacer()
+//                                Text("time")
+//                            }
+//                            .padding(.horizontal)
+                        }
+                    }
+                    .listStyle(PlainListStyle())
+                } else {
+                    List {
+                        ForEach(0 ... curr_time.stopwatches.count, id: \.self) { timer_element in
+                            Text("timer furstion: \(curr_time.stopwatches[0].duration)")
+                        }
+                    }
+                    .listStyle(PlainListStyle())
                 }
             }
             Spacer()
