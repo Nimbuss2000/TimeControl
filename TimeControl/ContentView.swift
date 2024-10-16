@@ -9,35 +9,26 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @StateObject var curr_time = MyClass()
+    @StateObject var curr_time = TimeControl()
     
     let elem_offset: CGFloat = 15
+    let board_offset: CGFloat = 15
+    let screen_width = UIScreen.main.bounds.size.width/2
+    let radian_coeff: Double = 60/360
+    let radian_coeff_h: Double = 12/360
     
     var body: some View {
         VStack {
             ZStack {
-                Rectangle()
-                    .fill(Color(hue: 0.629, saturation: 0.705, brightness: 0.594, opacity: 0.911))
-                    .clipShape(Capsule())
-                    .frame(width: 4, height: UIScreen.main.bounds.size.width/2-elem_offset*8)
-                    .offset(y: -UIScreen.main.bounds.size.width/4+elem_offset*4)
+                Arrow(arrow_type: Arrows.second, half_screen: screen_width-board_offset-10)
+                    .rotationEffect(Angle.degrees(Double(curr_time.curr_sec)/radian_coeff))
+                
+                Arrow(arrow_type: Arrows.minute, half_screen: screen_width-board_offset-10)
+                    .rotationEffect(Angle.degrees(Double(curr_time.curr_min)/radian_coeff))
+                
+                Arrow(arrow_type: Arrows.hour, half_screen: screen_width-board_offset-10)
                     .rotationEffect(Angle.degrees(
-                        (Double(curr_time.curr_min)/60+Double(curr_time.curr_hour))/12*360))
-                
-                Rectangle()
-                    .fill(Color(hue: 0.682, saturation: 0.346, brightness: 0.276, opacity: 0.581))
-                    .clipShape(Capsule())
-                    .frame(width: 3, height: UIScreen.main.bounds.size.width/2-elem_offset*4)
-                    .offset(y: -UIScreen.main.bounds.size.width/4+elem_offset*2)
-                    .rotationEffect(Angle.degrees(Double(curr_time.curr_min)/60*360))
-
-                
-                Rectangle()
-                    .fill(Color(hue: 0.578, saturation: 0.935, brightness: 0.289, opacity: 0.92))
-                    .clipShape(Capsule())
-                    .frame(width: 3, height: UIScreen.main.bounds.size.width/2 - elem_offset-10)
-                    .offset(y: -UIScreen.main.bounds.size.width/4 + elem_offset/2+5)
-                    .rotationEffect(Angle.degrees(Double(curr_time.curr_sec)/60*360))
+                        (Double(curr_time.curr_min)/60+Double(curr_time.curr_hour))/radian_coeff_h))
                 
                 Circle()
                     .frame(width: 10)
@@ -68,6 +59,7 @@ struct ContentView: View {
             .onAppear {
                 curr_time.timer()
             }
+            
             VStack{
                 HStack {
                     Button {

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 
-class MyClass: ObservableObject {
+class TimeControl: ObservableObject {
 
     @Published var curr_hour: Int = 0
     @Published var curr_min: Int = 0
@@ -20,13 +20,6 @@ class MyClass: ObservableObject {
     @Published var stopwatches = [Stopwatch]()
     var stopwatch: Stopwatch?
     
-//    var curr_stopwatch: Stopwatch?
-//    var stopwatch = [Stopwatch]()
-//
-//    let timerr = Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { timer in
-//        print("Timer fired!")
-//    }
-//
     var subs: AnyCancellable?
     
     func start_stopwatch() {
@@ -50,23 +43,6 @@ class MyClass: ObservableObject {
                 self.curr_sec = calendar.component(.second, from: date)
                 self.curr_date = date
             }
-    
-//        let timer = Timer()
-//
-//
-//        while true {
-////            let d = Date()
-//            let calendar = Calendar.current
-//
-//            let minute = calendar.component(.minute, from: Date())
-//
-//            await MainActor.run {
-//                if currminute != minute {
-//                    currminute = minute
-//                }
-//            }
-//            try? await Task.sleep(nanoseconds: 5_000_000_000)
-//        }
     }
 }
     
