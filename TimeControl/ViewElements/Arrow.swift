@@ -44,7 +44,7 @@ struct Arrow: View {
 }
 
 #Preview {
-    Arrow(arrow_type: Arrows.hour, half_screen: 100)
+    Arrow(arrow_type: Arrows.hour, half_screen: 200)
 }
 
 extension Color {

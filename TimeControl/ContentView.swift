@@ -31,29 +31,9 @@ struct ContentView: View {
                         (Double(curr_time.curr_min)/60+Double(curr_time.curr_hour))/radian_coeff_h))
                 
                 Circle()
-                    .frame(width: 10)
+                    .frame(width: 20)
                 
-                ForEach(0..<60) {
-                    tick in VStack {
-                        if tick % 5 == 0 {
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color.teal)
-                                    .frame(width: 3, height: 18)
-                                Text("\(tick == 0 ? 12 : tick/5)")
-                                    .rotationEffect(Angle.degrees(-180-Double(tick)/60*360))
-                                    .offset(y: -elem_offset-10)
-                            }
-                        } else {
-                            Rectangle()
-                                .fill(Color.primary)
-                                .frame(width: 1, height: 15)
-                        }
-                    }
-                    .offset(y: UIScreen.main.bounds.size.width/2 - elem_offset)
-                    .rotationEffect(Angle.degrees(180+Double(tick)/60*360))
-                }
-
+                Ticks(h_size: (w: 3, h: 18), m_size: (w: 1, h: 15), screen_width: screen_width, offset: board_offset)
             }
             .padding(.vertical, 150)
             .onAppear {
