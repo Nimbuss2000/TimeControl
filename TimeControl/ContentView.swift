@@ -31,7 +31,8 @@ struct ContentView: View {
                         (Double(curr_time.curr_min)/60+Double(curr_time.curr_hour))/radian_coeff_h))
                 
                 Circle()
-                    .frame(width: 20)
+                    .fill(Color(hex: 0x6f9940))
+                    .frame(width: 10)
                 
                 Ticks(h_size: (w: 3, h: 18), m_size: (w: 1, h: 15), screen_width: screen_width, offset: board_offset)
             }

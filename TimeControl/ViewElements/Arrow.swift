@@ -15,16 +15,16 @@ enum Arrows {
     
     var color: Color {
         switch self {
-        case.hour: return Color(hex: 0x891446)
-        case.minute: return Color(hex: 0x873260)
-        case.second: return Color(hex: 0x6d2b50)
+        case.hour: return Color(hex: 0x6f9940)
+        case.minute: return Color(hex: 0x02075d)
+        case.second: return Color(hex: 0xf5c71a)
         }
     }
     
     var coeff: CGFloat {
         switch self {
-        case.hour: return 0.4
-        case.minute: return 0.6
+        case.hour: return 0.65
+        case.minute: return 0.8
         case.second: return 1
         }
     }
@@ -35,12 +35,16 @@ struct Arrow: View {
     let half_screen: CGFloat
         
     var body: some View {
-        Rectangle()
+//        Rectangle()
+//            .fill(arrow_type.color)
+//            .clipShape(Capsule())
+//            .frame(width: 4, height: half_screen * arrow_type.coeff)
+//            .offset(y: -(half_screen * arrow_type.coeff)/2)
+        CustomArrow()
             .fill(arrow_type.color)
             .clipShape(Capsule())
-            .frame(width: 4, height: half_screen * arrow_type.coeff)
-            .offset(y: -(half_screen * arrow_type.coeff)/2)
-    }
+            .frame(width: 20, height: half_screen * arrow_type.coeff)
+            .offset(y: -(half_screen * arrow_type.coeff)/2)    }
 }
 
 #Preview {
@@ -56,5 +60,16 @@ extension Color {
             blue: Double((hex >> 00) & 0xff) / 255,
             opacity: opacity
         )
+    }
+}
+
+struct CustomArrow: Shape {
+    func path(in rect: CGRect) -> Path {
+        var trPath = Path()
+        trPath.move(to: CGPoint(x: rect.midX, y: rect.minY))
+        trPath.addLine(to: CGPoint(x: rect.maxX-5, y: rect.maxY))
+        trPath.addQuadCurve(to: CGPoint(x: rect.minX+5, y: rect.maxY), control: CGPoint(x: rect.midX, y: rect.maxY-9)) //-rect.maxX/2))
+        trPath.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
+        return trPath
     }
 }
