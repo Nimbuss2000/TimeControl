@@ -32,23 +32,19 @@ enum Arrows {
 
 struct Arrow: View {
     let arrow_type: Arrows
+    let arrow_width: CGFloat
     let half_screen: CGFloat
         
     var body: some View {
-//        Rectangle()
-//            .fill(arrow_type.color)
-//            .clipShape(Capsule())
-//            .frame(width: 4, height: half_screen * arrow_type.coeff)
-//            .offset(y: -(half_screen * arrow_type.coeff)/2)
-        CustomArrow()
+        CustomArrow(radius: arrow_width/2)
             .fill(arrow_type.color)
-            .clipShape(Capsule())
-            .frame(width: 20, height: half_screen * arrow_type.coeff)
-            .offset(y: -(half_screen * arrow_type.coeff)/2)    }
+//            .clipShape(Capsule())
+            .frame(width: arrow_width, height: half_screen * arrow_type.coeff)
+            .offset(y: -(half_screen * arrow_type.coeff)/2)  }
 }
 
 #Preview {
-    Arrow(arrow_type: Arrows.hour, half_screen: 200)
+    Arrow(arrow_type: Arrows.hour, arrow_width: 20, half_screen: 200)
 }
 
 extension Color {
@@ -64,11 +60,14 @@ extension Color {
 }
 
 struct CustomArrow: Shape {
+    
+    let radius: CGFloat
+    
     func path(in rect: CGRect) -> Path {
         var trPath = Path()
         trPath.move(to: CGPoint(x: rect.midX, y: rect.minY))
-        trPath.addLine(to: CGPoint(x: rect.maxX-5, y: rect.maxY))
-        trPath.addQuadCurve(to: CGPoint(x: rect.minX+5, y: rect.maxY), control: CGPoint(x: rect.midX, y: rect.maxY-9)) //-rect.maxX/2))
+        trPath.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        trPath.addArc(center: CGPoint(x: rect.midX, y: rect.maxY), radius: radius, startAngle: Angle(degrees: 0), endAngle: Angle(degrees: 180), clockwise: true)
         trPath.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
         return trPath
     }

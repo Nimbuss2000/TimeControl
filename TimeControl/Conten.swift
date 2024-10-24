@@ -11,27 +11,12 @@ import Combine
 
 class TimeControl: ObservableObject {
 
-    @Published var curr_hour: Int = 0
-    @Published var curr_min: Int = 0
-    @Published var curr_sec: Int = 0
+    @Published var curr_hour: Int?
+    @Published var curr_min: Int?
+    @Published var curr_sec: Int?
     
     var curr_date: Date?
-
-    @Published var stopwatches = [Stopwatch]()
-    var stopwatch: Stopwatch?
-    
     var subs: AnyCancellable?
-    
-    func start_stopwatch() {
-        stopwatch = Stopwatch(start: curr_date)
-    }
-    
-    func finish_stopwatch() {
-        stopwatch?.end_time = curr_date
-        stopwatch?.calc_duration()
-        stopwatches.append(stopwatch!)
-        stopwatch = nil
-    }
     
     func timer() {
         subs = Timer.publish(every: 1, on: .main, in: .common)

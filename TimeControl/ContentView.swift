@@ -10,8 +10,9 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var curr_time = TimeControl()
+    @StateObject var stopwatch = Stopwatch()
+    var emtyList: Bool = true
     
-    let elem_offset: CGFloat = 15
     let board_offset: CGFloat = 15
     let screen_width = UIScreen.main.bounds.size.width/2
     let radian_coeff: Double = 60/360
@@ -20,23 +21,25 @@ struct ContentView: View {
     var body: some View {
         VStack {
             ZStack {
-                Arrow(arrow_type: Arrows.second, half_screen: screen_width-board_offset-10)
-                    .rotationEffect(Angle.degrees(Double(curr_time.curr_sec)/radian_coeff))
-                
-                Arrow(arrow_type: Arrows.minute, half_screen: screen_width-board_offset-10)
-                    .rotationEffect(Angle.degrees(Double(curr_time.curr_min)/radian_coeff))
-                
-                Arrow(arrow_type: Arrows.hour, half_screen: screen_width-board_offset-10)
-                    .rotationEffect(Angle.degrees(
-                        (Double(curr_time.curr_min)/60+Double(curr_time.curr_hour))/radian_coeff_h))
-                
-                Circle()
-                    .fill(Color(hex: 0x6f9940))
-                    .frame(width: 10)
-                
+                if curr_time.curr_sec != nil {
+                    Arrow(arrow_type: Arrows.second, arrow_width: 20, half_screen: screen_width-board_offset-10)
+                        .rotationEffect(Angle.degrees(Double(curr_time.curr_sec!)/radian_coeff))
+                    
+                    Arrow(arrow_type: Arrows.minute, arrow_width: 20, half_screen: screen_width-board_offset-10)
+                        .rotationEffect(Angle.degrees(Double(curr_time.curr_min!)/radian_coeff))
+                    
+                    Arrow(arrow_type: Arrows.hour, arrow_width: 20, half_screen: screen_width-board_offset-10)
+                        .rotationEffect(Angle.degrees(
+                            (Double(curr_time.curr_min!)/60+Double(curr_time.curr_hour!))/radian_coeff_h))
+                    
+                    Circle()
+                        .fill(Color(hex: 0x44b6ff))
+                        .frame(width: 10)
+                }
+                Spacer()
                 Ticks(h_size: (w: 3, h: 18), m_size: (w: 1, h: 15), screen_width: screen_width, offset: board_offset)
+                    .padding(.vertical, 200)
             }
-            .padding(.vertical, 150)
             .onAppear {
                 curr_time.timer()
             }
@@ -44,47 +47,35 @@ struct ContentView: View {
             VStack{
                 HStack {
                     Button {
-                        curr_time.start_stopwatch()
+                        stopwatch.startTimer()
                     } label: {
-                        Text("start").padding()
+                        Text("start")
+                            .padding()
                     }
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.borderedProminent)
-                    
+                    .disabled(stopwatch.startButtonDiasabled)
                     Spacer()
-                    
-                    Button {
-                        curr_time.finish_stopwatch()
-                        print("\(curr_time.stopwatches.count)")
-                    } label: {
-                        Text("stop").padding()
+                    HStack {
+                        if stopwatch.timer != nil {
+                            Text("Minutes: \(stopwatch.stopwatchMin)\nSeconds: \(stopwatch.stopwatchSec)\nmSecondsX100: \(stopwatch.stopwatchTick)")
+                                .monospacedDigit()
+                        } else {
+                            Text("Timer here")
+                        }
                     }
-                    .buttonBorderShape(.circle)
-                    .buttonStyle(.borderedProminent)
+                    Spacer()
+                    Button {
+                        stopwatch.stopTimer()
+                    } label: {
+                        Text("stop")
+                            .padding()
+                    }
+                    .disabled(stopwatch.stopButtonDiasabled)
                 }
                 .padding(.horizontal)
+                .buttonBorderShape(.circle)
+                .buttonStyle(.borderedProminent)
                 
-                if curr_time.stopwatches.count == 0 {
-                    List {
-                        ForEach(0 ... 6, id: \.self) { timer_element in
-                            Text("")
-//                            HStack {
-//                                Text("timer")
-//                                Spacer()
-//                                Text("time")
-//                            }
-//                            .padding(.horizontal)
-                        }
-                    }
-                    .listStyle(PlainListStyle())
-                } else {
-                    List {
-                        ForEach(0 ... curr_time.stopwatches.count, id: \.self) { timer_element in
-                            Text("timer furstion: \(curr_time.stopwatches[0].duration)")
-                        }
-                    }
-                    .listStyle(PlainListStyle())
-                }
+                TimeList(stopwatch: stopwatch)
             }
             Spacer()
         }

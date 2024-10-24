@@ -9,20 +9,58 @@ import Foundation
 import Combine
 
 
-struct Stopwatch {
+class Stopwatch: ObservableObject {
     
-    var start_time: Date?
-    var end_time: Date?
-    var duration: Int=0
+    @Published var stopwatchTick: Int = 0 // 100 msec
+    @Published var stopwatchSec: Int = 0
+    @Published var stopwatchMin: Int = 0
+    @Published var stopwatchs: [String: [String: Int]] = [:]
+        
+    var timer: Timer?
+
+    var start: Date?
+    var end: Date?
+
     
-    init(start: Date?) {
-        start_time = start
-        end_time = nil
+    func startTimer() {
+        if timer == nil {
+            start = Date()
+            timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) {[self] _ in
+                stopwatchTick += 1
+                if stopwatchTick == 10 {
+                    stopwatchSec += 1
+                    stopwatchTick = 0
+                }
+                if stopwatchSec % 60 == 0 && stopwatchSec != 0{
+                    stopwatchMin += 1
+                }
+            }
+        } else {
+            print("timer just run")
+        }
     }
     
-    mutating func calc_duration() {
-        let calendar_start = Calendar.current.component(.second, from: start_time!)
-        let calendar_finish = Calendar.current.component(.second, from: end_time!)
-        duration = calendar_finish - calendar_start
+    func stopTimer() {
+        if timer != nil {
+            end = Date()
+            timer?.invalidate()
+            timer = nil
+            
+            stopwatchs["stopwatch_\(stopwatchs.count)"] = ["minutes": stopwatchMin, "seconds": stopwatchSec, "msecondsX100": stopwatchTick]
+            
+            stopwatchTick = 0
+            stopwatchMin = 0
+            stopwatchSec = 0
+        }
+    }
+    
+    var startButtonDiasabled: Bool {
+        guard timer != nil else { return false}
+        return true
+    }
+    
+    var stopButtonDiasabled: Bool {
+        guard timer != nil else { return true}
+        return false
     }
 }
